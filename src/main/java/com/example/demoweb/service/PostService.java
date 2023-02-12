@@ -7,14 +7,16 @@ import java.util.Date;
 
 @Service
 public class PostService {
-    public static ArrayList<Post> listAllPosts(){
-        ArrayList<Post> list = new ArrayList<>();
-        Post f = new Post("first one", new Date());
-        Post s = new Post("second one", new Date());
-        Post t = new Post("third one", new Date());
-        list.add(f);
-        list.add(s);
-        list.add(t);
-        return list;
+    ArrayList<Post> posts = new ArrayList<>();
+    public PostService(){
+        create("first");
+        create("second");
+        create("third");
+    }
+    public ArrayList<Post> listAllPosts(){
+        return posts;
+    }
+    public void create(String text) {
+        posts.add(new Post(text, new Date()));
     }
 }

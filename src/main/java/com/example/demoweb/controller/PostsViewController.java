@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class PostsViewController {
     @Autowired
-    public PostService postsService;
+    public static PostService postsService = new PostService();
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String list(Model model) {
         model.addAttribute("appName", "Моё супер приложение");
-        model.addAttribute("posts", PostService.listAllPosts());
+        model.addAttribute("posts", postsService.listAllPosts());
         return "list";
     }
     @ResponseBody
