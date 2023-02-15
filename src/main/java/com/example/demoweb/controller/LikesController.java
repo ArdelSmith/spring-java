@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public class LikesController {
     @Autowired
     LikesService likesService;
+
     @ResponseBody
     @RequestMapping(path = "/post/{id}/like", method = RequestMethod.POST)
     public String like(@PathVariable("id") Long id) {
