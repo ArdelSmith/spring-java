@@ -7,11 +7,12 @@ public class Post {
     private String text;
     private Integer likes;
     private Date creationDate;
-    public Post(Long id, String text, Date date)
+    public Post(Long id, String text, Date date, Integer likes)
     {
         this.id = id;
         this.text = text;
         this.creationDate = date;
+        this.likes = likes;
     }
     public void setLikes(Integer likes) {this.likes = likes;}
     public Date getCreationDate(){return this.creationDate;}
