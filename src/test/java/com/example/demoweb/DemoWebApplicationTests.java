@@ -3,13 +3,17 @@ package com.example.demoweb;
 import com.example.demoweb.controller.LikesController;
 import com.example.demoweb.controller.PostCreateController;
 import com.example.demoweb.controller.PostsViewController;
+import com.example.demoweb.repository.PostRepository;
 import com.example.demoweb.service.LikesService;
 import com.example.demoweb.service.PostService;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,9 +40,18 @@ class DemoWebApplicationTests {
 
 	@Autowired
 	private PostsViewController postsViewController;
-	@Test
-	void contextLoads() {
-	}
+
+	@MockBean
+	private PostService mPostService;
+
+	@MockBean
+	private LikesService mLikesService;
+
+	@MockBean
+	private PostCreateController mPostCreateController;
+
+	@MockBean
+	private PostRepository mPostRepository;
 
 	// Интеграционный тест 1 - если база используется или с ней что-то не так - ломается. Можно включить DBeaver для демонстрации
 	@Test
@@ -54,5 +67,15 @@ class DemoWebApplicationTests {
 		this.mockMvc.perform(post("/new").param("text", "bebra"))
 				.andDo(print())
 				.andExpect(status().isFound());
+	}
+
+	@Test
+	void createPost() {
+		mPostService.create("new post");
+	}
+
+	@Test
+	void likePost() {
+		mLikesService.like(Long.getLong("1"));
 	}
 }
