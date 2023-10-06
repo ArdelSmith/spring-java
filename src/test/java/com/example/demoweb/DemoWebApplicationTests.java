@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,57 +26,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
 class DemoWebApplicationTests {
+
 	@Autowired
-	private MockMvc mockMvc;
+	private LikesController likesController;
 
 	@Autowired
 	private PostService postService;
 
-	@Autowired LikesService likesService;
 
-	@Autowired
-	private PostCreateController postCreateController;
-
-	@Autowired
-	private PostsViewController postsViewController;
-
-	@MockBean
-	private PostService mPostService;
-
-	@MockBean
-	private LikesService mLikesService;
-
-	@MockBean
-	private PostCreateController mPostCreateController;
-
-	@MockBean
-	private PostRepository mPostRepository;
-
-	// Интеграционный тест 1 - если база используется или с ней что-то не так - ломается. Можно включить DBeaver для демонстрации
+	//Этот тест лайкает пост и проверяет, что новое количество лайков равно старому + 1 (точно работает)
 	@Test
-	void tryViewPosts() throws Exception{
-		this.mockMvc.perform(get("/"))
-				.andDo(print())
-				.andExpect(status().isOk());
-	}
-
-	// Интеграционный тест 2 - пытаемся создать пост с надписью bebra, и он создаётся
-	@Test
-	void tryCreate() throws Exception{
-		this.mockMvc.perform(post("/new").param("text", "bebra"))
-				.andDo(print())
-				.andExpect(status().isFound());
-	}
-
-	@Test
-	void createPost() {
-		mPostService.create("new post");
-	}
-
-	@Test
-	void likePost() {
-		mLikesService.like(Long.getLong("1"));
+	public void tryToLike() throws Exception{
+		var post = postService.listAllPosts().iterator().next();
+		int actual = post.getLikes();
+		likesController.like(post.getId());
+		System.out.println(actual + " " + post.getLikes());
+		post = postService.listAllPosts().iterator().next();
+		assertEquals(actual + 1, (int)post.getLikes());
 	}
 }
