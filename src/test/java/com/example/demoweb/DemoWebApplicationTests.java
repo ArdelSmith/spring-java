@@ -34,8 +34,14 @@ class DemoWebApplicationTests {
 	@Autowired
 	private PostService postService;
 
+	@Autowired
+	private PostCreateController postCreateController;
 
-	//Этот тест лайкает пост и проверяет, что новое количество лайков равно старому + 1 (точно работает)
+	@Autowired
+	private PostRepository d;
+
+
+	//Этот интеграционный тест лайкает пост и проверяет, что новое количество лайков равно старому + 1 (точно работает)
 	@Test
 	public void tryToLike() throws Exception{
 		var post = postService.listAllPosts().iterator().next();
@@ -44,5 +50,22 @@ class DemoWebApplicationTests {
 		System.out.println(actual + " " + post.getLikes());
 		post = postService.listAllPosts().iterator().next();
 		assertEquals(actual + 1, (int)post.getLikes());
+	}
+
+
+	//Этот интеграционный тест создаёт пост и удаляет его из базы данных
+	@Test
+	public void tryToDelete() throws Exception{
+		postCreateController.doCreate("bebra");
+		boolean bool = false;
+		var posts = postService.listAllPosts().iterator();
+		while (posts.hasNext()){
+			var post = posts.next();
+			if (post.getText().equals("bebra")){
+				d.delete(post);
+				bool = true;
+			}
+		}
+        assertTrue(bool);
 	}
 }
