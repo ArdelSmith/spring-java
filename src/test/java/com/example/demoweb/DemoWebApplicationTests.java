@@ -18,6 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.Random;
+
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -53,15 +55,21 @@ class DemoWebApplicationTests {
 	}
 
 
-	//Этот интеграционный тест создаёт пост и удаляет его из базы данных
+	//Этот интеграционный тест создаёт пост с рандомным текстом и удаляет его из базы данных
 	@Test
 	public void tryToDelete() throws Exception{
-		postCreateController.doCreate("bebra");
+		String text = null;
+		Random random = new Random();
+		int amount = random.nextInt(10);
+		for (int i = 0; i < amount; i++){
+			text += ((char)random.nextInt());
+		}
+		postCreateController.doCreate(text);
 		boolean bool = false;
 		var posts = postService.listAllPosts().iterator();
 		while (posts.hasNext()){
 			var post = posts.next();
-			if (post.getText().equals("bebra")){
+			if (post.getText().equals(text)){
 				d.delete(post);
 				bool = true;
 			}
