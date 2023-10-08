@@ -28,6 +28,7 @@ class CreateTest {
         var post = postService.create(text);
         Assert.assertNotNull(post);
         Assert.assertNotNull(post.getText());
+
         Assert.assertEquals(post.getText(), text);
         Mockito.verify(postRepository, Mockito.times(1)).save(post);
     }
